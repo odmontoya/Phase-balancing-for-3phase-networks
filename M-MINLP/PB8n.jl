@@ -27,7 +27,6 @@ function Matriz8Z(C) #Ω/km
         Zm = [0.078045 + im*0.0335775	0.026015 + im*0.0111925	 0.026015 + im*0.0111925;
               0.026015 + im*0.0111925	0.078045 + im*0.0335775	 0.026015 + im*0.0111925;
               0.026015 + im*0.0111925	0.026015 + im*0.0111925	 0.078045 + im*0.0335775];
-    
     end
 end
 # Define base values
@@ -122,12 +121,11 @@ end
 @variable(OPF, Idy[k in 1:3*NN] in ComplexPlane());
 @variable(OPF, Idd[k in 1:3*NN] in ComplexPlane());
 @variable(OPF, X[k in 1:3*NN, j in 1:3], Bin);
-#3. Define restrictions  
+#3. Define constraints  
 @constraint(OPF, V[3*slack-2] == 1.0 + im*0.0);
 @constraint(OPF, V[3*slack-1] == -0.5 - im*0.866025403784439);
 @constraint(OPF, V[3*slack] == -0.5 + im*0.866025403784439);
 @constraint(OPF, X[3*slack-2:3*slack,:] .== [1 0 0; 0 1 0; 0 0 1]);
-
 for k = 1:NN
     @constraint(OPF, Ig[3*k-2:3*k] - Idy[3*k-2:3*k] - transpose(M)*Idd[3*k-2:3*k] == (Ybus3[3*k-2:3*k,:]*V));
     @constraint(OPF, conj(Sg[3*k-2:3*k]) == LinearAlgebra.diagm(conj(V[3*k-2:3*k]))*Ig[3*k-2:3*k]);
